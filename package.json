@@ -1,0 +1,12 @@
+{
+  "name": "pm-cosmetics-hub",
+  "private": true,
+  "version": "0.1.0",
+  "description": "PM Cosmetics Hub — validated foundation for storefronts, catalog data, operations, and automation.",
+  "scripts": {
+    "validate": "node scripts/validate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
