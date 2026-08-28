@@ -4,7 +4,9 @@ const required = [
   'README.md',
   'package.json',
   'config/markets.json',
-  '.gitignore'
+  '.gitignore',
+  'app/index.html',
+  'docs/operations.md'
 ];
 
 for (const file of required) {
@@ -17,10 +19,13 @@ for (const file of required) {
 
 const pkg = JSON.parse(await readFile('package.json', 'utf8'));
 const config = JSON.parse(await readFile('config/markets.json', 'utf8'));
+const storefront = await readFile('app/index.html', 'utf8');
 
 if (pkg.name !== 'pm-cosmetics-hub') throw new Error('Invalid package name');
 if (config.canonical_name !== 'PM Cosmetics Hub') throw new Error('Invalid canonical brand name');
 if (!Array.isArray(config.markets) || config.markets.length < 1) throw new Error('No markets configured');
 if (config.rules.secrets_in_git !== false) throw new Error('Secret protection rule is invalid');
+if (!storefront.includes('<title>PM Cosmetics Hub</title>')) throw new Error('Storefront title is invalid');
+if (!storefront.includes('dir="rtl"')) throw new Error('Arabic RTL storefront support is missing');
 
-console.log(`Validation passed: ${config.canonical_name} / ${config.markets.length} markets`);
+console.log(`Validation passed: ${config.canonical_name} / ${config.markets.length} markets / storefront ready`);
