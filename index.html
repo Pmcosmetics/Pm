@@ -9,10 +9,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0A0A0A;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:10px;line-height:1.7}
 .gold{color:#D4AF37}.hero{padding:30px;text-align:center;background:#1a1a1a;border:2px solid #D4AF37;border-radius:20px;margin:10px}
-.btn{background:#D4AF37;color:#000;padding:15px 25px;border-radius:30px;font-weight:900;display:inline-block;margin:10px;text-decoration:none}
+.btn{background:#D4AF37;color:#000;padding:15px 25px;border-radius:30px;font-weight:900;display:inline-block;margin:10px;text-decoration:none;border:0;cursor:pointer}
 .card{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:15px;margin:10px 0}
 .notice{border-color:#8b6f19}.muted{opacity:.7;font-size:.92rem}
 footer{text-align:center;padding:20px;opacity:.65}
+.order-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
 </style>
 </head>
 <body>
@@ -20,7 +21,10 @@ footer{text-align:center;padding:20px;opacity:.65}
 <h1 class="gold">PM COSMETICS HUB 👑</h1>
 <h2>الإمبراطورية الرقمية لمستحضرات التجميل</h2>
 <p class="muted">كتالوج ومنتجات موثقة + طلب مباشر عبر واتساب</p>
-<a class="btn" href="https://wa.me/201055655649?text=73" rel="noopener">اطلب Bundle 73 عبر واتساب</a>
+<div class="order-actions">
+<a class="btn" data-bundle-order="73" data-wa="201055655649" href="#">اطلب Bundle 73 عبر واتساب الرئيسي</a>
+<a class="btn" data-bundle-order="73" data-wa="201203151461" href="#">واتساب الطلبات الاحتياطي</a>
+</div>
 </div>
 
 <div class="card">
@@ -31,8 +35,11 @@ footer{text-align:center;padding:20px;opacity:.65}
 
 <div class="card notice">
 <h3 class="gold">Bundle 73</h3>
-<p style="font-size:20px">عرض تجريبي — لا يُعتمد كسعر نهائي قبل التحقق.</p>
-<a class="btn" href="https://wa.me/201055655649?text=73" rel="noopener">اكتب 73 للطلب</a>
+<p style="font-size:20px">اطلب الآن بكتابة 73 — سيتم تجهيز رسالة واتساب بالطلب ورقم طلب فريد.</p>
+<div class="order-actions">
+<a class="btn" data-bundle-order="73" data-wa="201055655649" href="#">اكتب 73 للطلب</a>
+<a class="btn" data-bundle-order="73" data-wa="201203151461" href="#">واتساب احتياطي</a>
+</div>
 </div>
 
 <div class="card">
@@ -42,5 +49,21 @@ footer{text-align:center;padding:20px;opacity:.65}
 </div>
 
 <footer>PM Cosmetics Hub · لا يتم نشر بيانات غير متحققة أو محتوى غير متعلق بالمشروع.</footer>
+
+<script>
+(function(){
+  const buttons=document.querySelectorAll('[data-bundle-order]');
+  buttons.forEach(function(button){
+    button.addEventListener('click',function(event){
+      event.preventDefault();
+      const bundle=this.dataset.bundleOrder;
+      const phone=this.dataset.wa;
+      const order='PM-' + Date.now().toString().slice(-8);
+      const message='طلب PM Cosmetics\nرقم الطلب: '+order+'\nBundle: '+bundle+'\nالرجاء تأكيد الطلب والسعر النهائي.';
+      window.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(message);
+    });
+  });
+})();
+</script>
 </body>
 </html>
