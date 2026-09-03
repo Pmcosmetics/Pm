@@ -52,3 +52,15 @@ paths:
       summary: Adjust inventory
       responses:
         '202': { description: Accepted }
+  /api/v1/inventory/{skuId}/reserve:
+    post:
+      summary: Reserve inventory
+      description: Draft contract; route currently accepts the request and returns 202 without persistence.
+      responses:
+        '202': { description: Accepted }
+  /api/v1/inventory/{skuId}/commit:
+    post:
+      summary: Commit inventory reservation
+      description: Draft contract; route currently accepts the request and returns 202 without persistence.
+      responses:
+        '202': { description: Accepted }
