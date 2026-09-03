@@ -8,7 +8,11 @@ on:
       - 'contract-tests/**'
       - 'adapters/**'
       - 'services/adapters/**'
+      - '.github/workflows/contract-tests-include-adapter.yml'
   workflow_dispatch: {}
+
+permissions:
+  contents: read
 
 jobs:
   contract-tests:
@@ -37,5 +41,5 @@ jobs:
       - name: Run contract-tests (contract-tests package)
         working-directory: contract-tests
         run: |
-          npm ci
+          npm ci || npm install --prefer-offline --no-audit --no-fund
           npm test
