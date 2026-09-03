@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { test } from 'node:test';
 import { assertAdapter } from '../../adapters/contract/interfaces.js';
 import shopifyAdapter from '../../services/adapters/shopify-skeleton/src/index.js';
 
