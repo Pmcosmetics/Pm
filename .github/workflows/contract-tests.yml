@@ -1,0 +1,22 @@
+name: Contract Tests
+
+on:
+  pull_request:
+    paths:
+      - 'adapters/**'
+      - 'contract-tests/**'
+      - 'services/commerce-hub/**'
+  workflow_dispatch:
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run contract tests
+        run: npm run test:contracts
