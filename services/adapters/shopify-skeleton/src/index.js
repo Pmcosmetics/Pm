@@ -1,4 +1,4 @@
-import { assertAdapter } from '../../../adapters/contract/interfaces.js';
+import { assertAdapter } from '../../../../adapters/contract/interfaces.js';
 
 const adapter = assertAdapter({
   async pushProduct(product, context = {}) {
