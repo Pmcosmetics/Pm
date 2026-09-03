@@ -4,7 +4,9 @@
   "version": "0.2.0",
   "description": "PM Cosmetics Hub — scalable foundation for storefronts, catalog data, operations, intelligence, and growth.",
   "scripts": {
-    "validate": "node scripts/validate.mjs"
+    "validate": "node scripts/validate.mjs",
+    "migrate:validate": "node scripts/validate-migrations.mjs",
+    "smoke-test": "node scripts/smoke-test.mjs"
   },
   "engines": {
     "node": ">=20"
