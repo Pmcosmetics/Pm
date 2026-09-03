@@ -1,16 +1,26 @@
-# Commerce Hub API
+# Commerce Hub - Product API
 
-Minimal standalone Node.js service for the PM Cosmetics Commerce Hub.
+This service is a lightweight skeleton for the Commerce Hub product APIs. It is intentionally minimal and does not persist data yet — POST/PATCH endpoints return accepted/updated responses for early integration testing.
 
-## Local run
+Running locally
 
-```bash
-cd services/commerce-hub
-npm start
-```
+1. Copy environment example:
 
-The service exposes `/health` and the initial `/api/v1/products` and `/api/v1/skus` route skeletons. Persistence/auth integration is intentionally separated for the next implementation pass.
+   cp .env.example .env
 
-## Environment
+2. Install dependencies & run
 
-Copy `.env.example` to your local environment and provide values locally. Never commit secrets or production credentials.
+   npm ci
+   npm start
+
+Notes & security
+
+- SUPABASE_SERVICE_ROLE_KEY is a server-side secret. Never commit or expose it in client-side code.
+- For local testing you may use a staging service key; never use production keys in local or CI fixtures.
+- Persistence is disabled in the skeleton. Do not assume data is saved until migration 006 has been applied and runtime tests pass.
+
+Development
+
+- Tests: npm test
+- Health check: GET /health
+
