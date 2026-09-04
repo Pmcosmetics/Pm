@@ -1,11 +1,23 @@
 name: Validate catalog (images + CTA)
+
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'feeds/catalog-starter.json'
+      - 'pages/**'
+      - 'scripts/**'
+      - '.github/workflows/validate-catalog.yml'
   pull_request:
     paths:
       - 'feeds/catalog-starter.json'
       - 'pages/**'
       - 'scripts/**'
+      - '.github/workflows/validate-catalog.yml'
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   validate:
