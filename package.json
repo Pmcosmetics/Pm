@@ -6,7 +6,8 @@
   "scripts": {
     "validate": "node scripts/validate.mjs",
     "migrate:validate": "node scripts/validate-migrations.mjs",
-    "smoke-test": "node scripts/smoke-test.mjs"
+    "smoke-test": "node scripts/smoke-test.mjs",
+    "test:contracts": "node --test contract-tests/tests/*.test.js"
   },
   "engines": {
     "node": ">=20"
