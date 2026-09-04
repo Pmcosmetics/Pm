@@ -12,7 +12,6 @@ const headers = {
   Authorization: `Bearer ${key}`,
   'Content-Type': 'application/json',
 };
-const testOrderId = `SMOKE-${Date.now()}`;
 
 async function request(path, options = {}) {
   const response = await fetch(`${base}${path}`, {
@@ -26,42 +25,55 @@ async function request(path, options = {}) {
 }
 
 let failed = false;
-try {
-  const insert = await request('/rest/v1/orders', {
-    method: 'POST',
-    headers: { Prefer: 'return=representation' },
-    body: JSON.stringify([{ order_id: testOrderId, status: 'pending', source: 'smoke-test' }]),
-  });
-  if (!insert.response.ok) throw new Error(`insert failed (${insert.response.status})`);
-  console.log('Insert: OK');
 
-  const read = await request(`/rest/v1/orders?select=order_id,status&order_id=eq.${encodeURIComponent(testOrderId)}`);
-  if (!read.response.ok) throw new Error(`read failed (${read.response.status})`);
-  if (!Array.isArray(read.body) || read.body.length !== 1 || read.body[0].status !== 'pending') {
-    throw new Error('read verification failed');
+try {
+  const validation = await request('/rest/v1/rpc/create_commerce_order', {
+    method: 'POST',
+    body: JSON.stringify({
+      p_order_number: `SMOKE-${Date.now()}`,
+      p_channel_code: 'smoke',
+      p_currency: 'EGP',
+      p_items: [],
+    }),
+  });
+
+  if (validation.response.ok) {
+    throw new Error('create_commerce_order unexpectedly accepted an empty items array');
   }
-  console.log('Read verification: OK');
+
+  const errorText = JSON.stringify(validation.body || '').toLowerCase();
+  if (!errorText.includes('items must be a non-empty json array')) {
+    throw new Error(`unexpected create_commerce_order validation response (${validation.response.status})`);
+  }
+  console.log('Commerce RPC validation: OK');
+
+  const inactiveChannel = await request('/rest/v1/rpc/process_channel_order', {
+    method: 'POST',
+    body: JSON.stringify({
+      p_channel_code: 'shopify',
+      p_external_order_id: `SMOKE-${Date.now()}`,
+      p_payload: {
+        order_number: `SMOKE-${Date.now()}`,
+        currency: 'EGP',
+        items: [],
+      },
+    }),
+  });
+
+  if (inactiveChannel.response.ok) {
+    throw new Error('process_channel_order unexpectedly accepted an inactive channel');
+  }
+
+  const channelError = JSON.stringify(inactiveChannel.body || '').toLowerCase();
+  if (!channelError.includes('channel is not active')) {
+    throw new Error(`unexpected process_channel_order response (${inactiveChannel.response.status})`);
+  }
+  console.log('Channel runtime guard: OK');
 
   console.log('SMOKE TEST: OK');
 } catch (error) {
   failed = true;
   console.error('SMOKE TEST: FAILED', error?.message || error);
-} finally {
-  try {
-    const cleanup = await request(`/rest/v1/orders?order_id=eq.${encodeURIComponent(testOrderId)}`, {
-      method: 'DELETE',
-      headers: { Prefer: 'return=minimal' },
-    });
-    if (!cleanup.response.ok) {
-      console.error(`Cleanup failed (${cleanup.response.status})`);
-      failed = true;
-    } else {
-      console.log('Cleanup: OK');
-    }
-  } catch (error) {
-    console.error('Cleanup failed:', error?.message || error);
-    failed = true;
-  }
 }
 
 process.exit(failed ? 2 : 0);
