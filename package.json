@@ -10,6 +10,6 @@
     "test:contracts": "node --test contract-tests/tests/*.test.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   }
 }
